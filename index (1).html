@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>MonriceSMP1</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Vazirmatn:wght@300;400;700&display=swap">
+<style>
+:root{--bg:#000;--fg:#fff;--line:rgba(255,255,255,.14);--dim:rgba(255,255,255,.55);--soft:rgba(255,255,255,.06)}
+*{box-sizing:border-box;margin:0}html{color-scheme:dark}
+body{background:#000 radial-gradient(ellipse at 50% -10%,rgba(255,255,255,.08),transparent 55%) no-repeat;color:#fff;font:400 16px/1.5 Inter,Vazirmatn,system-ui,sans-serif;min-height:100vh}
+[dir=rtl] body{font-family:Vazirmatn,Inter,system-ui,sans-serif}
+a{color:inherit;text-decoration:none}main{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+h1{font-size:clamp(28px,5vw,44px);font-weight:800;letter-spacing:-.02em;margin-bottom:20px}h2{font-size:18px;font-weight:600;margin:26px 0 12px}
+.dim{color:var(--dim)}.center{text-align:center}.hint{font-size:12px;color:var(--dim)}
+.nav{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:18px;padding:14px 20px;flex-wrap:wrap;background:rgba(0,0,0,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.brand{font-weight:300;letter-spacing:.25em;font-size:14px}.brand b{font-weight:800}
+.nav nav{display:flex;gap:6px;flex:1;flex-wrap:wrap}.nav nav a{padding:6px 12px;border-radius:999px;font-size:14px;color:var(--dim);transition:.25s}
+.nav nav a:hover,.nav nav a.active{color:#000;background:#fff}.nav-right{display:flex;gap:10px;align-items:center}
+.seg{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}.seg button{background:none;border:0;color:var(--dim);padding:5px 11px;cursor:pointer;font:inherit;font-size:13px}.seg button.on{background:#fff;color:#000}
+.btn{display:inline-block;background:#fff;color:#000;border:1px solid #fff;padding:11px 22px;border-radius:12px;font:600 15px inherit;font-family:inherit;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 6px 0 rgba(255,255,255,.25),0 14px 30px rgba(255,255,255,.08)}
+.btn:hover{transform:translateY(-2px)}.btn:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(255,255,255,.25)}.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:transparent;color:#fff;box-shadow:none;border-color:var(--line)}.btn.ghost:hover{border-color:#fff}.btn.sm{padding:6px 14px;font-size:13px;border-radius:999px;box-shadow:none}
+.card{background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 20px 50px rgba(255,255,255,.03),inset 0 1px 0 rgba(255,255,255,.1)}
+.tilt{transition:transform .2s ease-out,border-color .3s;will-change:transform}.tilt:hover{border-color:rgba(255,255,255,.4)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px}
+.price{font-size:22px;font-weight:800;margin:10px 0 14px}.price small{font-weight:400;color:var(--dim);font-size:13px}
+input,textarea,select{width:100%;background:#000;color:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font:inherit;margin-bottom:12px;transition:.2s}
+input:focus,textarea:focus{outline:0;border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.12)}input[type=checkbox]{width:auto;margin:0 6px}input[type=color]{padding:2px;height:40px;width:56px;margin:0}
+label{display:block;font-size:13px;color:var(--dim);margin-bottom:6px}
+.err{border:1px solid #fff;padding:10px 14px;border-radius:10px;margin-bottom:12px;font-size:14px}
+.warn{background:#fff;color:#000;padding:12px 16px;border-radius:12px;font-weight:700;font-size:14px;margin-bottom:16px}
+.hero{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:18px}
+.ip{font-size:clamp(26px,6vw,56px);font-weight:800;letter-spacing:-.02em;cursor:pointer;background:none;border:0;color:#fff;font-family:inherit;text-shadow:0 10px 30px rgba(255,255,255,.2);transition:transform .25s}.ip:hover{transform:scale(1.03)}
+.status{display:flex;flex-direction:column;align-items:center;gap:14px}
+.orb{--mx:35%;--my:30%;width:110px;height:110px;border-radius:50%;border:1px solid var(--line);cursor:pointer;transition:all .5s;background:radial-gradient(circle at var(--mx) var(--my),#fff,#888 45%,#111 100%)}
+.orb.online{box-shadow:0 0 40px 8px rgba(255,255,255,.55),0 0 120px 30px rgba(255,255,255,.2),inset -10px -14px 24px rgba(0,0,0,.45);animation:glow 2.6s ease-in-out infinite}
+.orb.offline{filter:grayscale(1) brightness(.22);box-shadow:inset -10px -14px 24px rgba(0,0,0,.6)}.orb.loading{filter:brightness(.5);animation:pulse 1s infinite}
+@keyframes glow{50%{box-shadow:0 0 60px 14px rgba(255,255,255,.7),0 0 150px 40px rgba(255,255,255,.28),inset -10px -14px 24px rgba(0,0,0,.45)}}@keyframes pulse{50%{opacity:.4}}
+.sl{letter-spacing:.3em;font-weight:600;font-size:14px}.sl.offline{color:var(--dim)}
+.chat{display:flex;flex-direction:column;height:62vh}.msgs{flex:1;overflow-y:auto;padding:0 6px 8px}
+.msg{padding:7px 0;border-bottom:1px solid var(--soft);font-size:15px;word-break:break-word}.msg.system{color:var(--dim);font-style:italic}
+.who{background:none;border:0;color:inherit;font:inherit;font-weight:700;padding:0;cursor:default}.who.click{cursor:pointer;text-decoration:underline dotted}
+.tag{display:inline-block;font-size:11px;border:1px solid #fff;border-radius:6px;padding:0 6px;margin:0 6px}.tag.owner{background:#fff;color:#000}
+.rankbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0;padding:10px;border:1px solid var(--line);border-radius:12px}.rankbar input{width:130px;margin:0;padding:6px 10px}
+.row{display:flex;gap:10px;align-items:center}.row input{margin:0}
+.tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:start;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:middle}th{color:var(--dim);font-weight:400}td input{margin:0;padding:6px 8px}
+.pill{border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:12px}.pill.approved,.pill.open{background:#fff;color:#000}.pill.rejected,.pill.closed{opacity:.45}
+.ov{overflow-x:auto}.switch{display:flex;border:1px solid #fff;border-radius:12px;overflow:hidden;width:fit-content;margin-bottom:8px}.switch button{background:none;border:0;color:#fff;padding:10px 20px;cursor:pointer;font:inherit;font-weight:600}.switch button.on{background:#fff;color:#000}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:grid;place-items:center;padding:20px;z-index:20}.modal .card{width:min(520px,100%);max-height:90vh;overflow-y:auto}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#fff;color:#000;padding:12px 18px;border-radius:12px;font-weight:600;z-index:30;max-width:92vw;font-size:14px}
+.skin{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:18px}@media(max-width:820px){.skin,.two{grid-template-columns:1fr!important}}
+.cvw{position:relative;width:100%;max-width:512px;aspect-ratio:1;margin:0 auto;border:1px solid var(--line);background:repeating-conic-gradient(#1a1a1a 0 25%,#0a0a0a 0 50%) 0 0/16px 16px}
+#sk{width:100%;height:100%;image-rendering:pixelated;touch-action:none;cursor:crosshair;display:block}
+.gridov{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);background-size:1.5625% 1.5625%}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}.tools .on{background:#fff;color:#000}
+.pv{display:flex;gap:24px;justify-content:center;perspective:700px}.pv canvas{width:112px;height:224px;image-rendering:pixelated;transition:transform .15s;filter:drop-shadow(0 12px 14px rgba(255,255,255,.12))}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.chips button{background:none;border:1px solid var(--line);color:var(--dim);border-radius:999px;padding:4px 10px;cursor:pointer;font:inherit;font-size:12px}.chips button:hover{color:#fff;border-color:#fff}
+.two{display:grid;grid-template-columns:260px 1fr;gap:18px}.tk{padding:10px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;cursor:pointer}.tk.on{border-color:#fff}
+@media(max-width:640px){.nav nav{order:3;flex-basis:100%}}
+</style>
+</head>
+<body>
+<header class="nav" id="nav"></header><main id="app"></main><div id="modal"></div><div id="toast"></div>
+<script>
+/* ================= CONFIG ================= */
+const CONFIG={OWNER_EMAIL:'mahanbagheri757@gmail.com',IP:'Monricesmp1.aternos.me',TELEGRAM:'monster10193',
+ STATUS_URL:'https://api.mcstatus.io/v2/status/java/',
+ AI_ENDPOINT:'' /* optional: POST {prompt} -> {image:"data:image/png;base64,..."} (your own AI backend) */};
+
+/* ================= i18n (add languages here) ================= */
+const D={en:{'nav.home':'Home','nav.store':'Store','nav.skin':'AI Skin Creator','nav.chat':'Chat','nav.support':'Support','nav.admin':'Admin','nav.login':'Log in','nav.logout':'Log out',
+online:'ONLINE',offline:'OFFLINE',checking:'CHECKING',players:'players',copy:'Click to copy',copied:'Copied','hero.sub':'Premium survival. Zero noise.',
+'store.title':'Store',buy:'Buy',irt:'IRT','store.empty':'No products yet.','warn':'WARNING: You MUST log in with your exact Minecraft Username to receive items.',
+'c1':'1 · Payment','c2':'2 · Upload Proof of Transaction','c.login':'Log in to continue','c.as':'Logged in as','c.submit':'Submit order','c.cancel':'Cancel','c.done':'Order submitted. An admin will review your proof shortly.',
+'orders':'My orders',pending:'Pending',approved:'Approved',rejected:'Rejected','chat.title':'Global Chat','chat.ph':'Say something…',send:'Send','chat.login':'Log in to chat','chat.admin':'Admin: click a name to set a rank · /rank <user> <rank> · /promote · /demote',
+'sup.title':'Support Center','sup.tg':'Telegram (instant)','sup.new':'New ticket','sup.subj':'Subject','sup.msg':'Describe your issue','sup.open':'Open ticket','closed':'This ticket is closed.','sup.close':'Close ticket','sup.mine':'My tickets','sup.live':'Live support chat','sup.pick':'Select or create a ticket.',
+'a.user':'Minecraft Username','a.pass':'Password','a.mail':'Gmail','a.login':'Log in','a.reg':'Create account','a.code':'Verification code','a.verify':'Verify','a.sent':'We sent a 6-digit code to','a.demo':'Demo mode: no mail server is connected, so the code is shown on screen.','a.no':'No account? Register','a.has':'Have an account? Log in',
+'e.user':'Username: 3-16 letters, numbers or _','e.mail':'A Gmail address is required','e.pass':'Password must be at least 8 characters','e.dup':'Username or email already in use','e.cred':'Invalid username or password','e.code':'Wrong code',
+'sk.title':'AI Skin Creator','sk.prompt':'Describe your skin','sk.gen':'Generate','sk.wild':'Unfiltered creative mode (wild variations)','sk.export':'Export .png','sk.import':'Import .png','sk.clear':'Clear','sk.front':'Front','sk.back':'Back','sk.pen':'Pen','sk.eraser':'Eraser','sk.fill':'Fill','sk.pick':'Pick','sk.ph':'e.g. black ninja with red scarf and blue eyes'},
+fa:{'nav.home':'خانه','nav.store':'فروشگاه','nav.skin':'ساخت اسکین با AI','nav.chat':'چت','nav.support':'پشتیبانی','nav.admin':'مدیریت','nav.login':'ورود','nav.logout':'خروج',
+online:'آنلاین',offline:'آفلاین',checking:'در حال بررسی',players:'بازیکن',copy:'برای کپی کلیک کنید',copied:'کپی شد','hero.sub':'بقای حرفه‌ای. بدون شلوغی.',
+'store.title':'فروشگاه',buy:'خرید',irt:'تومان','store.empty':'هنوز محصولی نیست.','warn':'هشدار: برای دریافت آیتم‌ها حتماً با نام کاربری دقیق ماینکرافت خود وارد شوید.',
+'c1':'۱ · پرداخت','c2':'۲ · آپلود رسید تراکنش','c.login':'برای ادامه وارد شوید','c.as':'ورود با','c.submit':'ثبت سفارش','c.cancel':'انصراف','c.done':'سفارش ثبت شد. مدیر به‌زودی رسید را بررسی می‌کند.',
+'orders':'سفارش‌های من',pending:'در انتظار',approved:'تأیید شده',rejected:'رد شده','chat.title':'چت عمومی','chat.ph':'پیام بنویسید…',send:'ارسال','chat.login':'برای چت وارد شوید','chat.admin':'مدیر: روی نام کلیک کنید تا رتبه بدهید · /rank <user> <rank> · /promote · /demote',
+'sup.title':'مرکز پشتیبانی','sup.tg':'تلگرام (فوری)','sup.new':'تیکت جدید','sup.subj':'موضوع','sup.msg':'مشکل خود را شرح دهید','sup.open':'ثبت تیکت','closed':'این تیکت بسته شده است.','sup.close':'بستن تیکت','sup.mine':'تیکت‌های من','sup.live':'چت زنده پشتیبانی','sup.pick':'یک تیکت انتخاب یا ایجاد کنید.',
+'a.user':'نام کاربری ماینکرافت','a.pass':'رمز عبور','a.mail':'جیمیل','a.login':'ورود','a.reg':'ساخت حساب','a.code':'کد تأیید','a.verify':'تأیید','a.sent':'کد ۶ رقمی ارسال شد به','a.demo':'حالت دمو: سرور ایمیل وصل نیست و کد روی صفحه نمایش داده می‌شود.','a.no':'حساب ندارید؟ ثبت‌نام','a.has':'حساب دارید؟ ورود',
+'e.user':'نام کاربری: ۳ تا ۱۶ حرف انگلیسی، عدد یا _','e.mail':'آدرس جیمیل لازم است','e.pass':'رمز عبور حداقل ۸ کاراکتر','e.dup':'نام کاربری یا ایمیل قبلاً ثبت شده','e.cred':'نام کاربری یا رمز اشتباه است','e.code':'کد اشتباه است',
+'sk.title':'ساخت اسکین با AI','sk.prompt':'اسکین خود را توصیف کنید','sk.gen':'بساز','sk.wild':'حالت خلاقانه‌ی بدون محدودیت (تنوع زیاد)','sk.export':'خروجی .png','sk.import':'ورود .png','sk.clear':'پاک کردن','sk.front':'جلو','sk.back':'پشت','sk.pen':'قلم','sk.eraser':'پاک‌کن','sk.fill':'پر کردن','sk.pick':'انتخاب رنگ','sk.ph':'مثلاً نینجای مشکی با شال قرمز و چشم آبی'}};
+let lang=localStorage.getItem('lang')||'en';const t=k=>(D[lang]&&D[lang][k])||D.en[k]||k;
+
+/* ================= Backend layer =================
+   DEMO MODE: everything below stores data in this browser's localStorage, so nothing is shared
+   between visitors and nothing is truly secure. For production replace the functions in `API`
+   with fetch() calls to your server (Neon DB, Resend email codes, Blob uploads). */
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const bc=new BroadcastChannel('msmp');
+const load=()=>{try{return JSON.parse(localStorage.getItem('msmp'))}catch{return null}};
+let S=load()||{users:[],session:null,seq:10,settings:{ip:CONFIG.IP,mode:'auto',pay:'Card number: 0000-0000-0000-0000 — Name: YOUR NAME',ann:''},
+ products:[{id:1,name:'VIP',desc:'VIP rank with exclusive perks',cat:'Ranks',price:150000,on:true},{id:2,name:'MVP',desc:'MVP rank with premium perks',cat:'Ranks',price:300000,on:true},{id:3,name:'Starter Kit',desc:'Tools, food and armor',cat:'Items',price:50000,on:true}],
+ orders:[],tickets:[],msgs:[{id:1,u:'SYSTEM',role:'system',b:'Welcome to MonriceSMP1',t:Date.now()}]};
+const save=()=>{localStorage.setItem('msmp',JSON.stringify(S));bc.postMessage(1)};
+bc.onmessage=()=>{S=load()||S;onSync()};
+const sha=async s=>crypto.subtle?[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)))].map(b=>b.toString(16).padStart(2,'0')).join(''):btoa(unescape(encodeURIComponent(s)));
+const cur=()=>{const u=S.users.find(x=>x.id===S.session&&x.ok);if(u&&u.e===CONFIG.OWNER_EMAIL)u.role='owner';return u||null};
+const isAdm=u=>!!u&&(u.role==='admin'||u.role==='owner'),isOwn=u=>u.role==='owner'||u.e===CONFIG.OWNER_EMAIL;
+const irt=n=>Number(n).toLocaleString('en-US'),sys=b=>S.msgs.push({id:++S.seq,u:'SYSTEM',role:'system',b,t:Date.now()});
+const API={
+ sendCode(e,c){toast('DEMO — code for '+e+': '+c,15000)},            // real: POST /api/send-code -> Resend
+ async register(u,p,e){e=e.toLowerCase();
+  if(!/^[A-Za-z0-9_]{3,16}$/.test(u))throw Error(t('e.user'));if(!/^[^\s@]+@gmail\.com$/.test(e))throw Error(t('e.mail'));if(p.length<8)throw Error(t('e.pass'));
+  if(S.users.some(x=>x.u.toLowerCase()==u.toLowerCase()||x.e==e))throw Error(t('e.dup'));
+  const code=String(100000+Math.floor(Math.random()*900000));
+  S.users.push({id:++S.seq,u,e,h:await sha(p),role:e===CONFIG.OWNER_EMAIL?'owner':'player',rank:'Member',ok:false,code});save();API.sendCode(e,code);return e},
+ async login(u,p){const x=S.users.find(y=>y.u.toLowerCase()==u.toLowerCase());if(!x||x.h!==await sha(p))throw Error(t('e.cred'));
+  if(!x.ok){x.code=String(100000+Math.floor(Math.random()*900000));save();API.sendCode(x.e,x.code);return{verify:x.e}}S.session=x.id;save();return{}},
+ verify(e,c){const x=S.users.find(y=>y.e==e);if(!x||x.code!==String(c).trim())throw Error(t('e.code'));x.ok=true;x.code=null;S.session=x.id;save()},
+ async ping(){if(S.settings.mode!=='auto')return{online:S.settings.mode==='online'};
+  try{const d=await(await fetch(CONFIG.STATUS_URL+encodeURIComponent(S.settings.ip),{cache:'no-store'})).json();return{online:!!d.online,p:d.players?.online,m:d.players?.max}}catch{return{online:false}}},
+ setRank(me,name,rank){if(!isAdm(me))throw Error('Admins only');rank=(rank||'').trim().slice(0,16);
+  if(!name||!/^[\w +\-]+$/.test(rank))throw Error('Usage: /rank <user> <rank>');
+  const x=S.users.find(u=>u.ok&&u.u.toLowerCase()==name.toLowerCase());if(!x)throw Error('User not found');
+  if(isOwn(x)&&me.role!=='owner')throw Error('Cannot modify the owner');x.rank=rank;sys(`${me.u} set ${x.u}'s rank to ${rank}`);save()},
+ setRole(me,name,role){if(me.role!=='owner')throw Error('Owner only');const x=S.users.find(u=>u.ok&&u.u.toLowerCase()==(name||'').toLowerCase());
+  if(!x)throw Error('User not found');if(isOwn(x))throw Error('Cannot modify the owner');x.role=role;sys(`${me.u} ${role==='admin'?'promoted':'demoted'} ${x.u}`);save()},
+ chat(me,b){b=b.trim().slice(0,300);if(!b)return;
+  if(b[0]==='/'){if(!isAdm(me))throw Error('Commands are admin-only');const[c,tg,...r]=b.split(/\s+/);
+   if(c==='/rank')return API.setRank(me,tg,r.join(' '));if(c==='/promote'||c==='/demote')return API.setRole(me,tg,c==='/promote'?'admin':'player');
+   throw Error('Commands: /rank <user> <rank> · /promote <user> · /demote <user>')}
+  S.msgs.push({id:++S.seq,u:me.u,b,t:Date.now()});S.msgs=S.msgs.slice(-200);save()}};
+
+/* ================= helpers ================= */
+const app=h=>{$('#app').innerHTML=h};let timer=null,authMode='login',authEmail='',tgt=null,curT=null,tool='pen',pcolor='#ffffff',aTab='settings';
+function toast(m,ms=2500){const e=$('#toast');e.innerHTML=`<div class="toast">${esc(m)}</div>`;clearTimeout(toast.i);toast.i=setTimeout(()=>e.innerHTML='',ms)}
+const modal=h=>{$('#modal').innerHTML=`<div class="modal" data-act="close"><div class="card">${h}</div></div>`},closeM=()=>$('#modal').innerHTML='';
+const guard=fn=>{try{fn()}catch(e){toast(e.message)}};
+function shrink(f){return new Promise((ok,no)=>{const i=new Image(),u=URL.createObjectURL(f);i.onload=()=>{const k=Math.min(1,900/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*k;c.height=i.height*k;c.getContext('2d').drawImage(i,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL('image/jpeg',.7))};i.onerror=()=>no(Error('Invalid image'));i.src=u})}
+
+/* ================= nav + router ================= */
+const route=()=>(location.hash.slice(2)||'').split('/')[0];
+function nav(){const me=cur(),r=route(),L=[['','nav.home'],['store','nav.store'],['skin','nav.skin'],['chat','nav.chat'],['support','nav.support']];if(isAdm(me))L.push(['admin','nav.admin']);
+ $('#nav').innerHTML=`<a class="brand" href="#/">MONRICE<b>SMP1</b></a><nav>${L.map(([h,k])=>`<a href="#/${h}" class="${r===h?'active':''}">${t(k)}</a>`).join('')}</nav><div class="nav-right"><div class="seg">${['en','fa'].map(l=>`<button class="${lang===l?'on':''}" data-act="lang" data-v="${l}">${l==='en'?'EN':'فا'}</button>`).join('')}</div>${me?`<button class="btn sm ghost" data-act="logout">${esc(me.u)} · ${t('nav.logout')}</button>`:`<a class="btn sm" href="#/auth">${t('nav.login')}</a>`}</div>`}
+const routes={'':home,store,chat,skin,support,auth,admin};
+function go(){clearInterval(timer);document.documentElement.lang=lang;document.documentElement.dir=lang==='fa'?'rtl':'ltr';(routes[route()]||home)();nav()}
+addEventListener('hashchange',go);
+function onSync(){const r=route();if(r==='chat')renderMsgs();else if(r==='support'||(r==='admin'&&aTab==='tickets'))renderThread()}
+
+/* ================= home ================= */
+function home(){app(`<section class="hero"><div class="status"><button class="orb loading" id="orb" aria-label="refresh"></button><div class="sl" id="sl">${t('checking')}</div></div>
+<button class="ip" data-act="copy">${esc(S.settings.ip)}</button><div class="hint" id="ch">${t('copy')}</div><p class="dim">${t('hero.sub')}</p>${S.settings.ann?`<div class="card">${esc(S.settings.ann)}</div>`:''}
+<div class="row"><a class="btn" href="#/store">${t('nav.store')}</a><a class="btn ghost" href="#/skin">${t('nav.skin')}</a></div></section>`);
+ const o=$('#orb'),upd=async()=>{o.className='orb loading';$('#sl').textContent=t('checking');const s=await API.ping();if(!$('#orb'))return;o.className='orb '+(s.online?'online':'offline');
+  const l=$('#sl');l.className='sl '+(s.online?'online':'offline');l.textContent=(s.online?t('online'):t('offline'))+(s.online&&s.p!=null?` · ${s.p}/${s.m} ${t('players')}`:'')};
+ o.onmousemove=e=>{const r=o.getBoundingClientRect();o.style.setProperty('--mx',(e.clientX-r.left)/r.width*100+'%');o.style.setProperty('--my',(e.clientY-r.top)/r.height*100+'%')};
+ o.onclick=upd;upd();timer=setInterval(upd,30000)}
+
+/* ================= store ================= */
+function store(){const me=cur(),ps=S.products.filter(p=>p.on),cats=[...new Set(ps.map(p=>p.cat))],my=me?S.orders.filter(o=>o.uid===me.id).reverse():[];
+ app(`<h1>${t('store.title')}</h1>${ps.length?'':`<p class="dim">${t('store.empty')}</p>`}${cats.map(c=>`<h2>${esc(c)}</h2><div class="grid">${ps.filter(p=>p.cat===c).map(p=>`<div class="card tilt"><h3>${esc(p.name)}</h3><p class="dim" style="font-size:14px;min-height:40px">${esc(p.desc)}</p><div class="price">${irt(p.price)} <small>${t('irt')}</small></div><button class="btn sm" data-act="buy" data-id="${p.id}">${t('buy')}</button></div>`).join('')}</div>`).join('')}
+ ${my.length?`<h2>${t('orders')}</h2><div class="card ov"><table>${my.map(o=>`<tr><td>${esc(o.name)}</td><td>${irt(o.price)} ${t('irt')}</td><td><span class="pill ${o.st}">${t(o.st)}</span></td></tr>`).join('')}</table></div>`:''}`);
+ document.querySelectorAll('.tilt').forEach(c=>{c.onmousemove=e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform=`perspective(900px) rotateY(${x*7}deg) rotateX(${-y*7}deg) translateY(-3px)`};c.onmouseleave=()=>c.style.transform=''})}
+function buy(id){const p=S.products.find(x=>x.id==id),me=cur();
+ modal(`<h2 style="margin-top:0">${esc(p.name)} — ${irt(p.price)} ${t('irt')}</h2><div class="warn">${t('warn')}</div>${!me?`<a class="btn" href="#/auth" data-act="close2">${t('c.login')}</a>`:
+ `<p class="dim" style="margin-bottom:14px">${t('c.as')} <b style="color:#fff">${esc(me.u)}</b></p><label>${t('c1')}</label><div class="card" style="margin-bottom:16px;white-space:pre-wrap">${esc(S.settings.pay)}</div>
+ <label>${t('c2')}</label><input type="file" id="proof" accept="image/*"><div class="row"><button class="btn" data-act="order" data-id="${id}">${t('c.submit')}</button><button class="btn ghost" data-act="close2">${t('c.cancel')}</button></div>`}`)}
+async function order(id){const f=$('#proof')?.files[0];if(!f)return toast('Proof of transaction is required');const p=S.products.find(x=>x.id==id),me=cur();
+ try{const proof=await shrink(f);S.orders.push({id:++S.seq,uid:me.id,u:me.u,name:p.name,price:p.price,proof,st:'pending',t:Date.now()});save();modal(`<p style="margin-bottom:16px">${t('c.done')}</p><button class="btn" data-act="close2">OK</button>`);}catch(e){toast(e.message)}}
+
+/* ================= chat ================= */
+function chatRow(m){if(m.role==='system')return`<div class="msg system">${esc(m.b)}</div>`;const x=S.users.find(u=>u.u===m.u),role=x?(x.e===CONFIG.OWNER_EMAIL?'owner':x.role):'player',me=cur();
+ return`<div class="msg"><button class="who ${isAdm(me)?'click':''}" data-act="target" data-u="${esc(m.u)}">${esc(m.u)}</button>${role==='owner'?'<span class="tag owner">OWNER</span>':role==='admin'?'<span class="tag">ADMIN</span>':''}${x&&x.rank!=='Member'?`<span class="tag">${esc(x.rank)}</span>`:''} <span>${esc(m.b)}</span></div>`}
+function renderMsgs(){const b=$('#cm');if(!b)return;const bottom=b.scrollHeight-b.scrollTop-b.clientHeight<60;b.innerHTML=S.msgs.map(chatRow).join('');if(bottom)b.scrollTop=b.scrollHeight}
+function rankBar(){const e=$('#rb');if(!e)return;e.innerHTML=tgt?`<div class="rankbar"><b>${esc(tgt)}</b>${['Member','VIP','MVP','Helper','Mod'].map(r=>`<button class="btn sm ghost" data-act="rank" data-r="${r}">${r}</button>`).join('')}<input id="cr" placeholder="custom rank"><button class="btn sm" data-act="rank" data-r="">Set</button><button class="btn sm ghost" data-act="untarget">✕</button></div>`:''}
+function chat(){const me=cur();tgt=null;app(`<h1>${t('chat.title')}</h1><div class="card chat"><div class="msgs" id="cm"></div><div id="rb"></div>${me?`<form class="row" data-form="chat"><input name="b" maxlength="300" placeholder="${t('chat.ph')}" autocomplete="off"><button class="btn">${t('send')}</button></form>`:`<a class="btn" href="#/auth">${t('chat.login')}</a>`}${isAdm(me)?`<p class="hint" style="margin-top:10px">${t('chat.admin')}</p>`:''}</div>`);renderMsgs();$('#cm').scrollTop=1e9}
+
+/* ================= support / tickets ================= */
+function threadHTML(tk,me){return`<div class="msgs" id="tm" style="max-height:48vh;min-height:200px">${tk.msgs.map(m=>`<div class="msg"><b>${esc(m.u)}</b>${m.staff?'<span class="tag">STAFF</span>':''} ${esc(m.b)}</div>`).join('')}</div>${tk.st==='open'?`<form class="row" data-form="treply" style="margin-top:10px"><input name="b" maxlength="500" required placeholder="${t('chat.ph')}" autocomplete="off"><button class="btn">${t('send')}</button></form><button class="btn sm ghost" style="margin-top:10px" data-act="tclose">${t('sup.close')}</button>`:`<p class="hint">${t('closed')}</p>`}`}
+function renderThread(){const e=$('#tv');if(!e)return;const me=cur(),tk=S.tickets.find(x=>x.id===curT);const v=e.querySelector('input')?.value;
+ e.innerHTML=tk?`<h3 style="margin-bottom:10px">#${tk.id} · ${esc(tk.subj)} <span class="pill ${tk.st}">${tk.st}</span></h3>${threadHTML(tk,me)}`:`<p class="dim">${t('sup.pick')}</p>`;
+ const i=e.querySelector('input');if(i&&v)i.value=v;const m=$('#tm');if(m)m.scrollTop=1e9}
+function tList(list,showU){return list.map(k=>`<div class="tk ${k.id===curT?'on':''}" data-act="tsel" data-id="${k.id}"><b>#${k.id}</b> ${esc(k.subj)}<br><span class="hint">${showU?esc(k.u)+' · ':''}${k.st}</span></div>`).join('')}
+function support(){const me=cur();
+ app(`<h1>${t('sup.title')}</h1><div class="row" style="margin-bottom:20px"><a class="btn" target="_blank" rel="noopener" href="https://t.me/${CONFIG.TELEGRAM}">${t('sup.tg')} · @${CONFIG.TELEGRAM}</a></div>
+ ${!me?`<a class="btn ghost" href="#/auth">${t('c.login')}</a>`:`<div class="two"><div><div class="card" style="margin-bottom:14px"><h3 style="margin-bottom:10px">${t('sup.new')}</h3><form data-form="tnew"><input name="s" placeholder="${t('sup.subj')}" maxlength="80" required><textarea name="m" rows="3" placeholder="${t('sup.msg')}" maxlength="500" required></textarea><button class="btn sm">${t('sup.open')}</button></form></div>
+ <h2 style="margin-top:0">${t('sup.mine')}</h2><div id="tl">${tList(S.tickets.filter(k=>k.uid===me.id).reverse())}</div></div><div class="card" id="tv"></div></div>`}`);if(me)renderThread()}
+
+/* ================= auth ================= */
+function auth(){const m=authMode,L=m==='verify'?'a.verify':m==='login'?'a.login':'a.reg';
+ app(`<div style="max-width:420px;margin:40px auto"><form class="card" data-form="auth"><h1 style="font-size:28px">${t(L)}</h1><div id="ae"></div>${m==='verify'?`<p class="dim" style="margin-bottom:6px">${t('a.sent')} ${esc(authEmail)}</p><p class="hint" style="margin-bottom:12px">${t('a.demo')}</p><label>${t('a.code')}</label><input name="c" inputmode="numeric" maxlength="6" required autofocus style="letter-spacing:8px;text-align:center;font-size:22px">`:
+ `<label>${t('a.user')}</label><input name="u" autocomplete="username" required>${m==='register'?`<label>${t('a.mail')}</label><input name="e" type="email" placeholder="name@gmail.com" required>`:''}<label>${t('a.pass')}</label><input name="p" type="password" autocomplete="${m==='login'?'current-password':'new-password'}" required>`}
+ <button class="btn" style="width:100%">${t(L)}</button>${m!=='verify'?`<p class="center dim" style="margin-top:16px;cursor:pointer;font-size:14px" data-act="amode">${t(m==='login'?'a.no':'a.has')}</p>`:''}</form></div>`)}
+
+/* ================= AI skin creator ================= */
+let sk,cx;const FRONT=[[8,8,8,8,4,0],[20,20,8,12,4,8],[44,20,4,12,0,8],[36,52,4,12,12,8],[4,20,4,12,4,20],[20,52,4,12,8,20],[40,8,8,8,4,0],[20,36,8,12,4,8],[44,36,4,12,0,8],[52,52,4,12,12,8],[4,36,4,12,4,20],[4,52,4,12,8,20]],
+BACK=[[24,8,8,8,4,0],[32,20,8,12,4,8],[44,52,4,12,0,8],[52,20,4,12,12,8],[28,52,4,12,4,20],[12,20,4,12,8,20],[56,8,8,8,4,0],[32,36,8,12,4,8],[60,52,4,12,0,8],[52,36,4,12,12,8],[12,52,4,12,4,20],[12,36,4,12,8,20]];
+const COL={red:'#c0392b',crimson:'#a01830',blue:'#2c5fb3',navy:'#1a2a5c',cyan:'#00bcd4',green:'#2e8b3d',lime:'#7ac943',yellow:'#e6c619',gold:'#d4a017',orange:'#e67e22',purple:'#7b3fa0',violet:'#8a4fd0',pink:'#e86fa8',black:'#161616',white:'#f1f1f1',gray:'#7a7a7a',grey:'#7a7a7a',silver:'#b8bcc2',brown:'#6b4426',blonde:'#e2c35a',
+ قرمز:'#c0392b',آبی:'#2c5fb3',سبز:'#2e8b3d',مشکی:'#161616',سفید:'#f1f1f1',طلایی:'#d4a017',بنفش:'#7b3fa0',صورتی:'#e86fa8',نارنجی:'#e67e22',خاکستری:'#7a7a7a',زرد:'#e6c619'};
+const SKINS={pale:'#f3d2b8',tan:'#c68c5a',dark:'#7b4a2a',brown:'#8a5a38',green:'#5a8f4a',gray:'#9a9a9a',blue:'#6fa8dc',red:'#c0504d'};
+function shade(c,k){const n=parseInt(c.slice(1),16);return`rgb(${Math.min(255,(n>>16)*k)|0},${Math.min(255,((n>>8)&255)*k)|0},${Math.min(255,(n&255)*k)|0})`}
+function gen(p,wild){const s=p.toLowerCase();let h=7;for(const ch of s+Date.now()*(wild?1:0))h=(h*31+ch.charCodeAt(0))>>>0;const rnd=()=>{h=(h*1664525+1013904223)>>>0;return h/4294967296};
+ const has=(...w)=>w.some(x=>s.includes(x)),pick=re=>{const m=s.match(re);return m&&COL[m[1]]},cols=(s.match(/[\p{L}]+/gu)||[]).map(w=>COL[w]).filter(Boolean);
+ let skin='#e0ac84',hair=pick(/(\S+)\s+hair/)||'#4a3220',shirt=pick(/(\S+)\s+(?:shirt|hoodie|jacket|robe|suit|armou?r|cloak|coat|tee|scarf)/)||cols[0]||'#2c5fb3',pants=pick(/(\S+)\s+(?:pants|jeans|trousers)/)||cols[1]||'#2b3a67',acc=cols[2]||cols[0]||'#f1f1f1',eye=pick(/(\S+)\s+eyes/)||'#3b6fd4',shoe='#2a2a2a',longS=has('hoodie','robe','suit','armor','armour','knight','ninja','astronaut','jacket','long sleeve','coat','نینجا','شوالیه','جادوگر','فضانورد'),lg=has('long hair');
+ const sm=s.match(/(\S+)\s+skin/);if(sm&&SKINS[sm[1]])skin=SKINS[sm[1]];if(has('pale'))skin=SKINS.pale;if(has('tan'))skin=SKINS.tan;
+ const th=has('ninja','نینجا')?'ninja':has('knight','armor','armour','شوالیه')?'knight':has('wizard','mage','جادوگر')?'wizard':has('robot','ربات')?'robot':has('zombie','زامبی')?'zombie':has('skeleton','اسکلت')?'skeleton':has('pirate','دزد دریایی')?'pirate':has('astronaut','فضانورد')?'astro':'';
+ if(th==='ninja'){shirt=cols[0]||'#161616';pants=cols[1]||'#161616';acc=cols[0]&&cols[2]?cols[2]:'#c0392b'}
+ if(th==='knight'){shirt=pants='#8d939b';acc='#c9ced4';longS=1}if(th==='wizard'){shirt=pants=cols[0]||'#4b2a7a';acc=cols[1]||'#d4a017';longS=1;hair='#d8d8d8'}
+ if(th==='robot'){skin='#9aa0a6';shirt='#3a3f44';pants='#2b2f33';eye='#00e5ff';acc='#00e5ff';longS=1}if(th==='zombie'){skin='#5a8f4a';shirt='#2c5fb3';pants='#2b3a67';hair='#2a3a22'}
+ if(th==='skeleton'){skin=shirt=pants='#e8e8e0';eye='#111';hair='#e8e8e0';longS=1}if(th==='pirate'){shirt='#f1f1f1';pants='#3a2a1a';acc='#b3261e'}if(th==='astro'){shirt=pants='#e8e8ea';acc='#d4a017';longS=1}
+ cx.clearRect(0,0,64,64);const F=(c,x,y,w,hh)=>{cx.fillStyle=c;cx.fillRect(x,y,w,hh)},N=wild?.28:.12;
+ const box=(bx,by,w,hh,d,c)=>[[bx+d,by,w,d,1.1],[bx+d+w,by,w,d,.7],[bx,by+d,d,hh,.85],[bx+d,by+d,w,hh,1],[bx+d+w,by+d,d,hh,.85],[bx+d+w+d,by+d,w,hh,.9]].forEach(([x,y,ww,hh2,k])=>{for(let i=0;i<ww;i++)for(let j=0;j<hh2;j++)F(shade(c,k*(1+(rnd()-.5)*N)),x+i,y+j,1,1)});
+ const arm=longS?shirt:skin;box(0,0,8,8,8,skin);box(16,16,8,12,4,shirt);box(40,16,4,12,4,arm);box(32,48,4,12,4,arm);box(0,16,4,12,4,pants);box(16,48,4,12,4,pants);
+ [[0,16],[16,48]].forEach(([bx,by])=>F(shoe,bx,by+4+12-3,16,3));
+ F(hair,8,0,8,8);F(hair,24,8,8,8);F(hair,0,8,8,lg?8:3);F(hair,16,8,8,lg?8:3);F(hair,8,8,8,2);
+ F('#fff',9,12,2,1);F(eye,10,12,1,1);F('#fff',13,12,2,1);F(eye,13,12,1,1);F('#7a3b2e',11,14,2,1);
+ const hat=c=>box(32,0,8,8,8,c);
+ if(th==='ninja'){hat(shirt);cx.clearRect(40,12,8,2);F('#fff',41,12,2,1);F(eye,42,12,1,1);F('#fff',45,12,2,1);F(eye,45,12,1,1);F(acc,16+4,28-1,8,1)}
+ if(th==='knight'){hat('#8d939b');F('#15181b',41,12,6,2);F(acc,43,8,2,4)}
+ if(th==='wizard'){F(shirt,40,0,8,8);F(shirt,32,8,32,3);F(acc,32,10,32,1)}
+ if(th==='robot'){F(acc,22,23,4,1);F(acc,22,25,4,1);F('#15181b',9,14,6,1)}
+ if(th==='zombie'){for(let i=0;i<14;i++)F(shade(shirt,.6),20+(rnd()*8|0),20+(rnd()*12|0),1,1)}
+ if(th==='skeleton'){F('#111',9,12,2,2);F('#111',13,12,2,2);[22,24,26,28].forEach(y=>F('#555',21,y,6,1))}
+ if(th==='pirate'){F(acc,40,0,8,8);F(acc,32,8,32,3);F('#111',41,12,2,1);for(let y=20;y<32;y+=2)F('#2c3e6b',20,y,8,1)}
+ if(th==='astro'){hat('#e8e8ea');F('#b8891d',41,9,6,4);F('#f5d97a',42,10,1,1)}
+ if(!th&&has('hoodie'))F(acc,20,26,8,2);
+ if(wild)for(let i=0;i<34;i++){const r=[[20,20,8,12],[44,20,4,12],[36,52,4,12],[4,20,4,12],[20,52,4,12]][rnd()*5|0];F(rnd()<.5?acc:shade(shirt,.5+rnd()),r[0]+(rnd()*r[2]|0),r[1]+(rnd()*r[3]|0),1+(rnd()*2|0),1)}
+ persist();preview()}
+function preview(){[['pf',FRONT],['pb',BACK]].forEach(([id,P])=>{const c=$('#'+id);if(!c)return;const g=c.getContext('2d');g.imageSmoothingEnabled=false;g.clearRect(0,0,16,32);P.forEach(([a,b,w,h,x,y])=>g.drawImage(sk,a,b,w,h,x,y,w,h))})}
+const persist=()=>{try{localStorage.setItem('msmp_skin',sk.toDataURL())}catch{}};
+function flood(x,y){const im=cx.getImageData(0,0,64,64),d=im.data,i0=(y*64+x)*4,t0=[...d.slice(i0,i0+4)],c=cx.fillStyle=pcolor,n=parseInt(pcolor.slice(1),16),r=n>>16,g=(n>>8)&255,b=n&255;
+ if(t0[0]===r&&t0[1]===g&&t0[2]===b&&t0[3]===255)return;const st=[[x,y]];while(st.length){const[px,py]=st.pop();if(px<0||py<0||px>63||py>63)continue;const i=(py*64+px)*4;if(d[i]!==t0[0]||d[i+1]!==t0[1]||d[i+2]!==t0[2]||d[i+3]!==t0[3])continue;d[i]=r;d[i+1]=g;d[i+2]=b;d[i+3]=255;st.push([px+1,py],[px-1,py],[px,py+1],[px,py-1])}cx.putImageData(im,0,0)}
+const EX=['black ninja with red scarf and blue eyes','golden knight in silver armor','purple wizard with white hair','cyan robot','green zombie in blue shirt','pirate with red bandana','astronaut','سبز زامبی','pale girl with long pink hair and black hoodie'];
+function skin_(){}
+function skin(){app(`<h1>${t('sk.title')}</h1><div class="skin"><div class="card"><div class="tools">${[['pen','sk.pen'],['eraser','sk.eraser'],['fill','sk.fill'],['pick','sk.pick']].map(([k,l])=>`<button class="btn sm ghost ${tool===k?'on':''}" data-act="tool" data-v="${k}">${t(l)}</button>`).join('')}<input type="color" id="pc" value="${pcolor}"></div>
+ <div class="cvw"><canvas id="sk" width="64" height="64"></canvas><div class="gridov"></div></div></div>
+ <div><div class="card" style="margin-bottom:18px"><div class="pv" id="pvw"><div class="center"><canvas id="pf" width="16" height="32"></canvas><div class="hint">${t('sk.front')}</div></div><div class="center"><canvas id="pb" width="16" height="32"></canvas><div class="hint">${t('sk.back')}</div></div></div>
+ <div class="row" style="margin-top:16px;justify-content:center;flex-wrap:wrap"><button class="btn sm" data-act="sexp">${t('sk.export')}</button><label class="btn sm ghost" style="margin:0;color:#fff">${t('sk.import')}<input type="file" id="si" accept="image/png" hidden></label><button class="btn sm ghost" data-act="sclr">${t('sk.clear')}</button></div></div>
+ <div class="card"><label>${t('sk.prompt')}</label><textarea id="sp" rows="3" placeholder="${t('sk.ph')}"></textarea><div class="chips">${EX.map(e=>`<button data-act="sex" data-v="${esc(e)}">${esc(e)}</button>`).join('')}</div>
+ <label style="color:#fff"><input type="checkbox" id="sw">${t('sk.wild')}</label><button class="btn" style="margin-top:12px" data-act="sgen">${t('sk.gen')}</button></div></div></div>`);
+ sk=$('#sk');cx=sk.getContext('2d',{willReadFrequently:true});const saved=localStorage.getItem('msmp_skin');
+ if(saved){const i=new Image();i.onload=()=>{cx.drawImage(i,0,0);preview()};i.src=saved}else gen('',false);
+ let down=false;const at=e=>{const r=sk.getBoundingClientRect();return[Math.floor((e.clientX-r.left)/r.width*64),Math.floor((e.clientY-r.top)/r.height*64)]};
+ const paint=(e,first)=>{const[x,y]=at(e);if(x<0||y<0||x>63||y>63)return;cx.fillStyle=pcolor;
+  if(tool==='pen')cx.fillRect(x,y,1,1);else if(tool==='eraser')cx.clearRect(x,y,1,1);else if(tool==='fill'&&first)flood(x,y);
+  else if(tool==='pick'&&first){const d=cx.getImageData(x,y,1,1).data;if(d[3]){pcolor='#'+[d[0],d[1],d[2]].map(v=>v.toString(16).padStart(2,'0')).join('');$('#pc').value=pcolor;tool='pen';skin.tools()}}preview()};
+ sk.onpointerdown=e=>{down=true;sk.setPointerCapture(e.pointerId);paint(e,true)};sk.onpointermove=e=>{if(down&&tool!=='fill'&&tool!=='pick')paint(e)};sk.onpointerup=()=>{down=false;persist()};
+ $('#pc').oninput=e=>pcolor=e.target.value;
+ $('#si').onchange=e=>{const f=e.target.files[0];if(!f)return;const i=new Image(),u=URL.createObjectURL(f);i.onload=()=>{cx.clearRect(0,0,64,64);cx.drawImage(i,0,0,64,Math.min(64,i.height));URL.revokeObjectURL(u);persist();preview()};i.src=u};
+ const pv=$('#pvw');pv.onmousemove=e=>{const r=pv.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5;pv.querySelectorAll('canvas').forEach(c=>c.style.transform=`rotateY(${x*28}deg)`)};pv.onmouseleave=()=>pv.querySelectorAll('canvas').forEach(c=>c.style.transform='')}
+skin.tools=()=>document.querySelectorAll('[data-act=tool]').forEach(b=>b.classList.toggle('on',b.dataset.v===tool));
+
+/* ================= admin ================= */
+function admin(){const me=cur();if(!isAdm(me))return app(`<div class="center"><h1>403</h1><a class="btn" href="#/auth">${t('a.login')}</a></div>`);
+ const tabs=['settings','products','orders','users','tickets'];let body='';
+ if(aTab==='settings'){const s=S.settings;body=`<div class="card"><label>Server status (manual override if the server can't be pinged)</label><div class="switch">${[['auto','AUTO'],['online','FORCE ON'],['offline','FORCE OFF']].map(([v,l])=>`<button class="${s.mode===v?'on':''}" data-act="mode" data-v="${v}">${l}</button>`).join('')}</div><p class="hint" style="margin-bottom:18px">AUTO pings the server. FORCE ON/OFF ignores the ping.</p>
+ <form data-form="aset"><label>Server IP</label><input name="ip" value="${esc(s.ip)}"><label>Payment instructions (shown at checkout)</label><textarea name="pay" rows="3">${esc(s.pay)}</textarea><label>Homepage announcement</label><textarea name="ann" rows="2">${esc(s.ann)}</textarea><button class="btn sm">Save</button></form></div>`}
+ if(aTab==='products')body=`<div class="card ov"><table><tr><th>Name</th><th>Description</th><th>Category</th><th>Price (IRT)</th><th>On</th><th></th></tr>${[...S.products,{id:0,name:'',desc:'',cat:'Ranks',price:0,on:true}].map(p=>`<tr data-pid="${p.id}"><td><input data-f="name" value="${esc(p.name)}"></td><td><input data-f="desc" value="${esc(p.desc)}"></td><td><input data-f="cat" value="${esc(p.cat)}"></td><td><input data-f="price" type="number" value="${p.price}"></td><td><input data-f="on" type="checkbox" ${p.on?'checked':''}></td><td style="white-space:nowrap"><button class="btn sm" data-act="psave" data-id="${p.id}">${p.id?'Save':'Add'}</button>${p.id?` <button class="btn sm ghost" data-act="pdel" data-id="${p.id}">Del</button>`:''}</td></tr>`).join('')}</table></div>`;
+ if(aTab==='orders')body=`<div class="card ov"><table><tr><th>#</th><th>Player</th><th>Item</th><th>IRT</th><th>Proof</th><th>Status</th><th></th></tr>${[...S.orders].reverse().map(o=>`<tr><td>${o.id}</td><td><b>${esc(o.u)}</b></td><td>${esc(o.name)}</td><td>${irt(o.price)}</td><td><button class="btn sm ghost" data-act="proof" data-id="${o.id}">View</button></td><td><span class="pill ${o.st}">${o.st}</span></td><td style="white-space:nowrap"><button class="btn sm" data-act="ost" data-id="${o.id}" data-v="approved">Approve</button> <button class="btn sm ghost" data-act="ost" data-id="${o.id}" data-v="rejected">Reject</button></td></tr>`).join('')}</table></div>`;
+ if(aTab==='users')body=`<div class="card ov"><table><tr><th>User</th><th>Email</th><th>Role</th><th>Rank</th><th></th></tr>${S.users.filter(u=>u.ok).map(u=>`<tr><td><b>${esc(u.u)}</b></td><td class="dim">${esc(u.e)}</td><td><span class="pill">${isOwn(u)?'owner':u.role}</span></td><td><input data-ru="${esc(u.u)}" value="${esc(u.rank)}"></td><td style="white-space:nowrap"><button class="btn sm" data-act="urank" data-u="${esc(u.u)}">Set rank</button>${me.role==='owner'&&!isOwn(u)?` <button class="btn sm ghost" data-act="urole" data-u="${esc(u.u)}" data-v="${u.role==='admin'?'player':'admin'}">${u.role==='admin'?'Demote':'Make admin'}</button>`:''}</td></tr>`).join('')}</table></div>`;
+ if(aTab==='tickets')body=`<div class="two"><div>${tList([...S.tickets].reverse(),1)||''}</div><div class="card" id="tv"></div></div>`;
+ app(`<h1>Admin ${me.role==='owner'?'<span class="tag owner">OWNER</span>':''}</h1><div class="tabs">${tabs.map(x=>`<button class="btn sm ${aTab===x?'':'ghost'}" data-act="atab" data-v="${x}">${x}</button>`).join('')}</div>${body}`);if(aTab==='tickets')renderThread()}
+
+/* ================= events ================= */
+const A={
+ close(el,e){if(e.target===el)closeM()},close2:()=>closeM(),lang(el){lang=el.dataset.v;localStorage.setItem('lang',lang);go()},
+ logout(){S.session=null;save();location.hash='#/';go()},
+ copy(){navigator.clipboard?.writeText(S.settings.ip).then(()=>{$('#ch').textContent=t('copied');setTimeout(()=>$('#ch').textContent=t('copy'),1500)}).catch(()=>{})},
+ buy:el=>buy(el.dataset.id),order:el=>order(el.dataset.id),
+ target(el){if(isAdm(cur())){tgt=el.dataset.u;rankBar()}},untarget(){tgt=null;rankBar()},
+ rank(el){guard(()=>{API.setRank(cur(),tgt,el.dataset.r||$('#cr').value);tgt=null;rankBar();renderMsgs()})},
+ amode(){authMode=authMode==='login'?'register':'login';auth()},
+ tsel(el){curT=+el.dataset.id;document.querySelectorAll('.tk').forEach(x=>x.classList.toggle('on',x===el));renderThread()},
+ tclose(){const k=S.tickets.find(x=>x.id===curT);if(k){k.st='closed';save();route()==='admin'?admin():support()}},
+ tool(el){tool=el.dataset.v;skin.tools()},sgen(){gen($('#sp').value,$('#sw').checked)},sex(el){$('#sp').value=el.dataset.v;gen(el.dataset.v,$('#sw').checked)},
+ sclr(){cx.clearRect(0,0,64,64);persist();preview()},sexp(){sk.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='monricesmp1-skin.png';a.click()})},
+ atab(el){aTab=el.dataset.v;admin()},mode(el){S.settings.mode=el.dataset.v;save();admin()},
+ psave(el){const r=document.querySelector(`tr[data-pid="${el.dataset.id}"]`),g=f=>r.querySelector(`[data-f=${f}]`),id=+el.dataset.id,o={name:g('name').value.trim(),desc:g('desc').value,cat:g('cat').value||'Items',price:Math.max(0,parseInt(g('price').value)||0),on:g('on').checked};
+  if(!o.name)return toast('Name required');if(id)Object.assign(S.products.find(p=>p.id===id),o);else S.products.push({id:++S.seq,...o});save();toast('Saved');admin()},
+ pdel(el){if(confirm('Delete?')){S.products=S.products.filter(p=>p.id!=el.dataset.id);save();admin()}},
+ proof(el){const o=S.orders.find(x=>x.id==el.dataset.id);modal(`<img src="${o.proof}" style="width:100%;border-radius:12px"><button class="btn ghost" style="margin-top:12px" data-act="close2">OK</button>`)},
+ ost(el){S.orders.find(x=>x.id==el.dataset.id).st=el.dataset.v;save();admin()},
+ urank(el){guard(()=>{API.setRank(cur(),el.dataset.u,document.querySelector(`[data-ru="${el.dataset.u}"]`).value);toast('Saved');admin()})},
+ urole(el){guard(()=>{API.setRole(cur(),el.dataset.u,el.dataset.v);admin()})}};
+document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(el&&A[el.dataset.act])A[el.dataset.act](el,e)});
+const FORMS={
+ chat(f){guard(()=>{API.chat(cur(),f.b.value);f.b.value='';renderMsgs()})},
+ treply(f){const me=cur(),k=S.tickets.find(x=>x.id===curT);if(!k||!f.b.value.trim())return;k.msgs.push({u:me.u,b:f.b.value.trim(),staff:isAdm(me)&&k.uid!==me.id,t:Date.now()});save();renderThread()},
+ tnew(f){const me=cur(),k={id:++S.seq,uid:me.id,u:me.u,subj:f.s.value.trim(),st:'open',msgs:[{u:me.u,b:f.m.value.trim(),t:Date.now()}]};S.tickets.push(k);curT=k.id;save();support()},
+ aset(f){Object.assign(S.settings,{ip:f.ip.value.trim()||CONFIG.IP,pay:f.pay.value,ann:f.ann.value});save();toast('Saved')},
+ async auth(f){const ae=$('#ae');ae.innerHTML='';try{
+  if(authMode==='register'){authEmail=await API.register(f.u.value,f.p.value,f.e.value);authMode='verify';auth()}
+  else if(authMode==='login'){const r=await API.login(f.u.value,f.p.value);if(r.verify){authEmail=r.verify;authMode='verify';auth()}else{location.hash='#/';go()}}
+  else{API.verify(authEmail,f.c.value);authMode='login';location.hash='#/';go()}}catch(e){ae.innerHTML=`<div class="err">${esc(e.message)}</div>`}}};
+document.addEventListener('submit',e=>{e.preventDefault();FORMS[e.target.dataset.form]?.(e.target)});
+go();
+</script>
+</body>
+</html>
